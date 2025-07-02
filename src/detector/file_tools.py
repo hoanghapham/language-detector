@@ -3,6 +3,7 @@ import os
 import sys
 import json
 import unicodedata
+from joblib import load, dump
 
 
 def list_files(input_path: Path | str, extensions) -> list[Path]:
@@ -129,3 +130,21 @@ def write_list_to_text_file(lst: list[str], output_path: Path | str, linebreak=T
 
 def normalize_name(s):
     return unicodedata.normalize('NFD', s)
+
+
+def save_model(model, pkl_path: str|Path):
+    save_path = Path(pkl_path)
+    assert save_path.suffix == ".pkl", "Model path must end with '.pkl'"
+
+    if not save_path.parent.exists():
+        save_path.parent.mkdir(parents=True)
+
+    with open(pkl_path, "wb") as f:
+        dump(model, f, protocol=5, compress=3)
+
+def load_model(pkl_path: str | Path):
+    assert Path(pkl_path).suffix == ".pkl", "Model path must end with '.pkl'"
+    with open(pkl_path, "rb") as f:
+        model = load(f)
+    
+    return model
