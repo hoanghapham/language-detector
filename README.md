@@ -26,3 +26,9 @@ App:
 
 
 https://huggingface.co/FacebookAI/xlm-roberta-base
+
+
+API Endpoints:
+- Text file processor
+- Text processor
+- 
