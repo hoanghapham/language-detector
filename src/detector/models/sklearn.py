@@ -1,11 +1,11 @@
-from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.preprocessing import OrdinalEncoder
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 import numpy as np
 
-class Classifier():
+
+class NaiveBayesClassifier():
     def __init__(self):
         self.model = MultinomialNB()
         self.X_encoder = CountVectorizer(analyzer="word")
@@ -14,20 +14,20 @@ class Classifier():
 
     def train(self, X_raw: list[str], y_raw: list[str]):
         # Fit vectorizer
-        print("Fit X encoder")
+        print("Fit X encoder...")
         self.X_encoder.fit(X_raw)
 
-        print("Fit y encoder")
+        print("Fit y encoder...")
         self.y_encoder.fit(np.array(y_raw).reshape(-1, 1))
         self.categories = self.y_encoder.categories_[0]
 
         # Transform
-        print("Transform X")
+        print("Transform X...")
         X = self.X_encoder.transform(X_raw)
         y = self.y_encoder.transform(np.array(y_raw).reshape(-1, 1)).reshape(-1)
 
         # Fit model
-        print("Fit model")
+        print("Fit model...")
         self.model.fit(X, y)
 
     def evaluate(self, X_raw: list[str], y_raw: list[str]):
@@ -45,7 +45,6 @@ class Classifier():
             "fscore": {str(k): float(v) for k, v in zip(self.categories, fscores)},
             "support": {str(k): float(v) for k, v in zip(self.categories, supports)},
         }
-
 
     
     def predict(self, texts: str | list[str]):
