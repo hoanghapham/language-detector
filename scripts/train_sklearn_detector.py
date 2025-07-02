@@ -22,6 +22,6 @@ print("Evaluate model")
 evaluation = classifier.evaluate(X_test_raw, y_test_raw)
 
 print("Save model & evaluation results")
-save_model(classifier, PROJECT_DIR / "models/naive_bayes_clf.pkl")
-write_json_file(evaluation, PROJECT_DIR / "models/naive_bayes_clf_eval.json")
+save_model(classifier, PROJECT_DIR / "models/naive_bayes.pkl")
+write_json_file(evaluation, PROJECT_DIR / "models/naive_bayes_eval.json")
 

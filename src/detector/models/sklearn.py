@@ -3,6 +3,7 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 import numpy as np
+from schemas import PredictionOutput
 
 
 class NaiveBayesClassifier():
@@ -47,7 +48,7 @@ class NaiveBayesClassifier():
         }
 
     
-    def predict(self, texts: str | list[str]):
+    def predict(self, texts: str | list[str]) -> PredictionOutput:
 
         if isinstance(texts, str):
             texts = [texts]
@@ -57,5 +58,5 @@ class NaiveBayesClassifier():
 
         y_labels = self.categories[np.argmax(y_probs, axis=1)]
         y_label_probs = np.max(y_probs, axis=1)
-
-        return [(str(label), float(prob)) for label, prob in list(zip(y_labels, y_label_probs))]
+        result = PredictionOutput(results=[(str(label), float(prob)) for label, prob in list(zip(y_labels, y_label_probs))])
+        return result
