@@ -3,8 +3,7 @@ from typing import List, Tuple
 
 
 class TextInput(BaseModel):
-    text: str
-    model: str
+    text: list[str]
 
 
 class PredictionOutput(BaseModel):

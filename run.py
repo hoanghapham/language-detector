@@ -1,28 +1,34 @@
 import multiprocessing
 import uvicorn
-from ui.main import interface
 import requests
+import subprocess
+
 
 def start_fastapi():
-    uvicorn.run("src.app.main:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("app.main:app", host="0.0.0.0", port=8000)
 
 
-def pred(text, model):
+def simple_interface():
+    text_input = input("Enter text: ")
+    model_input = "test"
     response = requests.post(
         "http://localhost:8000/predict",
-        json={"text": text, "model": model},
+        json={"text": text_input, "model": model_input},
         timeout=300
     )
     print(response.json())
     return response.json()
 
 
-def start_interface():
-    input_text = input("Enter text: ")
-    input_model = input("Enter model name: ")
-    pred(input_text, input_model)
+def start_streamlit():
+    subprocess.run(["streamlit", "run", "src/streamlit_ui/main.py"])
 
 
 if __name__ == "__main__":
-    # multiprocessing.Process(target=start_fastapi).start()
-    start_interface()
+    
+    # Start FastAPI in a subprocess
+    fastapi_proc = multiprocessing.Process(target=start_fastapi)
+    fastapi_proc.start()
+
+    # Start Streamlit in main process
+    start_streamlit()

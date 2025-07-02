@@ -3,7 +3,7 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 import numpy as np
-from schemas import PredictionOutput
+from app.schemas import PredictionOutput
 
 
 class NaiveBayesClassifier():
