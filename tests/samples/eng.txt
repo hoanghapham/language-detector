@@ -1,0 +1,1 @@
+In statistics, naive (sometimes simple or idiot's) Bayes classifiers are a family of probabilistic classifiers which assumes that the features are conditionally independent, given the target class

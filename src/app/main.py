@@ -4,7 +4,6 @@ from pathlib import Path
 from fastapi import FastAPI
 from pydantic import ValidationError
 
-from detectors.base import BaseClassifier
 from detectors.sklearn import load_pkl_model
 from utils.schemas import PredictionInput, PredictionOutput
 from utils.file_tools import read_json_file
@@ -27,10 +26,15 @@ load_model = {
 }
 
 models = {}
-
 lang_labels = read_json_file(PROJECT_DIR / "assets/lang_labels.json")
 
+# App flow
 app = FastAPI()
+
+
+@app.get("/")
+def read_root():
+    return {"app_name": "Language Detector"}
 
 
 @app.post("/predict/", response_model=PredictionOutput)
@@ -45,6 +49,7 @@ def predict(content: dict) -> PredictionOutput:
 
         # Predict
         pred_result = models[model_name].predict(prediction_input.texts)
+        print(pred_result)
         file_names = prediction_input.file_names
         result = PredictionOutput(results=[
             (name, lang_code, lang_labels[lang_code], prob) 
