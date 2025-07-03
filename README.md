@@ -28,7 +28,23 @@ App:
 https://huggingface.co/FacebookAI/xlm-roberta-base
 
 
-API Endpoints:
-- Text file processor
-- Text processor
-- 
+Backend:
+- Input processor:
+    - Receive different file types & raw text
+        - raw text processor
+        - txt processor
+        - doc/docx processor
+        - pdf processor:
+            - Handle pdf with text layer
+            - Handle scanned pdf
+        - image processor
+    - Features:
+        - read/parse text, tokenize, embedding
+        - output a universal type
+- Predictor
+    - Pipelines:
+        - raw text - sklearn pipeline
+        - raw text - transformer pipeline
+    - Input handler:
+        - sklearn pipeline: sklearn-compatible matrix
+        - transformer pipeline: transformer-compatible matrix

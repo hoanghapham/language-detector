@@ -97,13 +97,13 @@ def write_json_file(data: dict, output_path: Path | str):
         f.write(json.dumps(data) + "\n")
 
 
-def read_lines(input_file: Path | str) -> list[str]:
+def read_text_lines(input_file: Path | str) -> list[str]:
     with open(input_file, "r", encoding="utf-8") as f:
         lines = [line.strip() for line in f.readlines()]
     return lines
 
 
-def read_text_file(input_file: Path | str) -> str:
+def read_text_joined(input_file: Path | str) -> str:
     with open(input_file, "r", encoding="utf-8") as f:
         text = "".join(list(f.readlines()))
     return text
@@ -131,20 +131,3 @@ def write_list_to_text_file(lst: list[str], output_path: Path | str, linebreak=T
 def normalize_name(s):
     return unicodedata.normalize('NFD', s)
 
-
-def save_model(model, pkl_path: str|Path):
-    save_path = Path(pkl_path)
-    assert save_path.suffix == ".pkl", "Model path must end with '.pkl'"
-
-    if not save_path.parent.exists():
-        save_path.parent.mkdir(parents=True)
-
-    with open(pkl_path, "wb") as f:
-        dump(model, f, protocol=5, compress=3)
-
-def load_model(pkl_path: str | Path):
-    assert Path(pkl_path).suffix == ".pkl", "Model path must end with '.pkl'"
-    with open(pkl_path, "rb") as f:
-        model = load(f)
-    
-    return model
