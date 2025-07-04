@@ -1,50 +1,48 @@
-2. We would also like to ask you to implement a method to identify the language a document is written in. You can use any framework available, but you should implement an approach on your own. If you re-implement an approach taken from the literature, please provide a reference. The suggested programming language is Python.
+# Language Detector
 
-Input:
-- Plain text input
-- .txt
-- .pdf: text and OCR
-- .doc/docx
+This project is a full web application that can do language detection. Components used:
+- Backend: FastAPI
+- UI: `streamlit`
+- Models: scikit-learn's `MultinomialNB`; HuggingFace's `XLMRobertaForSequenceClassification`
 
-Output:
-- list of possible languages, with probability
+## Install packages
+- Clone this project.
+- Create a virtual environment using `venv`, `pyenv`, or `conda`, and activate the environment.
+- Install required packages with [uv project manager](https://docs.astral.sh/uv/#installation):
 
-App:
-- Input:
-    - File upload
-    - Text input
-    - Batch upload
-- Model selection
-    - Simple model
-    - Transformer-based model
-- Output
-    - A table
+```bash
+# Install packages
+uv sync
 
-- Deployment
-    - Docker
-    - HuggingFace deployment?
+# Or, install the whole project in editable mode
+uv pip install -e .
+```
 
+- Install with `pip`:
 
-https://huggingface.co/FacebookAI/xlm-roberta-base
+```
+pip install -r requirements.txt
+```
 
+## Run the app
 
-Backend:
-- Input processor:
-    - Receive different file types & raw text
-        - raw text processor
-        - txt processor
-        - doc/docx processor
-        - pdf processor:
-            - Handle pdf with text layer
-            - Handle scanned pdf
-        - image processor
-    - Features:
-        - read/parse text, tokenize, embedding
-        - output a universal type
-- Predictor
-    - Pipelines:
-        - raw text - sklearn pipeline
-        - raw text - transformer pipeline
-    - Input handler:
-        - sklearn pipeline: sklearn-compatible matrix
-        - transformer pipeline: transformer-compatible matrix
+Run:
+
+```bash
+python run.py
+```
+
+The script with launch the application in a new browser tab.
+
+## Language detection
+
+To perform language detection, you can upload files to the app (multiple files are acceptable). Supported file types are:
+
+```python
+SUPPORT_EXTENSIONS = ["txt", "pdf", "doc", "docx", 'md', "odt"]
+```
+
+Alternatively, you can also type in some texts into the text box. After that, you can select the model to be used for the detection task. Two supported models are NaiveBayes (implemented with `scikit-learn`) and XLM-RoBERTa (the multi-lingual version of RoBERTa). 
+
+After clicking "Predict", the app will take some time to load the model for the first time if it's not loaded yet. Then, the app will display the file, the language detected, and the score corresponding to the language.
+
