@@ -46,3 +46,4 @@ Alternatively, you can also type in some texts into the text box. After that, yo
 
 After clicking "Predict", the app will take some time to load the model for the first time if it's not loaded yet. Then, the app will display the file, the language detected, and the score corresponding to the language.
 
+![](./assets/demo.png)
