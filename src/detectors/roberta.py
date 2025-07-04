@@ -1,8 +1,9 @@
 from pathlib import Path
 from transformers import pipeline
 from detectors.base import BaseClassifier
-import pandas as pd
 import torch
+from utils.file_tools import read_json_file
+
 
 PROJECT_DIR = Path(__file__).parent.parent.parent
 
@@ -18,7 +19,7 @@ class XLMRoBERTAClassifier(BaseClassifier):
             device=self.device
         )
 
-        self.labels = pd.read_csv(PROJECT_DIR / "data/wili-2018/labels.csv")
+        self.labels = read_json_file(PROJECT_DIR / "assets/lang_labels.json")
     
     def train(self, X_raw: list[str], y_raw: list[str]):
         pass
@@ -33,7 +34,7 @@ class XLMRoBERTAClassifier(BaseClassifier):
 
     @property
     def categories(self):
-        return self.labels["Label"].tolist()
+        return list(self.labels.keys())
     
 
 def load_transformer_model(path: str | Path):

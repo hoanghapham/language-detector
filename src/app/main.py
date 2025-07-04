@@ -17,14 +17,14 @@ def load_NaiveBayes():
     return load_pkl_model(PROJECT_DIR / "models/naive_bayes.pkl")
 
 
-def load_RoBERTa():
+def load_XLMRoBERTa():
     return load_transformer_model(PROJECT_DIR / "models/xlm-roberta")
 
 
 # Helpers
 load_model = {
     "NaiveBayes": load_NaiveBayes,
-    "RoBERTa": load_RoBERTa
+    "XLM-RoBERTa": load_XLMRoBERTa
 }
 
 models = {}
