@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from pydantic import ValidationError
 
 from detectors.sklearn import load_pkl_model
+from detectors.roberta import load_transformer_model
 from utils.schemas import PredictionInput, PredictionOutput
 from utils.file_tools import read_json_file
 
@@ -17,7 +18,8 @@ def load_NaiveBayes():
 
 
 def load_RoBERTa():
-    return None
+    return load_transformer_model(PROJECT_DIR / "models/xlm-roberta")
+
 
 # Helpers
 load_model = {

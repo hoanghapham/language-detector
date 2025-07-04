@@ -60,8 +60,8 @@ if st.button("Predict"):
         st.subheader("Prediction Results")
         df = pd.DataFrame(
             data=data, 
-            columns=["File", "Language Code", "Language Name", "Probability"]
+            columns=["File", "Language Code", "Language Name", "Score"]
         )
-        st.dataframe(df, column_config={"Prob.": st.column_config.NumberColumn(format="%.2f")})
+        st.dataframe(df, column_config={"Score": st.column_config.NumberColumn(format="%.2f")})
     else:
         st.error(f"API Error: {response.status_code}")
