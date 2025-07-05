@@ -3,6 +3,7 @@
 # models/*
 workpad/*
 .DS_store
+cache/*
 
 # Python-generated files
 __pycache__/
