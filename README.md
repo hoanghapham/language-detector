@@ -3,7 +3,10 @@
 This project is a full web application that can do language detection. Components used:
 - Backend: FastAPI
 - UI: `streamlit`
-- Models: scikit-learn's `MultinomialNB`; HuggingFace's `XLMRobertaForSequenceClassification`
+- Models:
+    - scikit-learn: `MultinomialNB`, trained for multi-class classification
+    - Transformers: [XLM RoBERTa Small](https://huggingface.co/Unbabel/xlm-roberta-comet-small), fine-tuned for language detection.
+
 
 ## Install packages
 - Clone this project.
