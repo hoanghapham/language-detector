@@ -18,7 +18,7 @@ uploaded_files = st.file_uploader("Upload documents", type=SUPPORT_EXTENSIONS, a
 manual_text = st.text_area("Or enter text manually", height=150)
 
 # --- Model selection ---
-model = st.selectbox("Select model", ["NaiveBayes", "XLM-RoBERTa"])
+model = st.selectbox("Select model", ["XLM-RoBERTa", "NaiveBayes"])  # default to XLM-RoBERTa
 
 # --- Predict button ---
 file_names = []

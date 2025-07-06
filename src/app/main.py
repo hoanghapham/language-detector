@@ -1,5 +1,4 @@
 import uvicorn
-import pandas as pd
 from pathlib import Path
 from fastapi import FastAPI
 from pydantic import ValidationError
@@ -23,12 +22,13 @@ def load_XLMRoBERTa():
 
 # Helpers
 load_model = {
+    "XLM-RoBERTa": load_XLMRoBERTa,
     "NaiveBayes": load_NaiveBayes,
-    "XLM-RoBERTa": load_XLMRoBERTa
 }
 
 models = {}
 lang_labels = read_json_file(PROJECT_DIR / "assets/lang_labels.json")
+
 
 # App flow
 app = FastAPI()
