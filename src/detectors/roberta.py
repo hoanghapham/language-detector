@@ -1,5 +1,5 @@
 from pathlib import Path
-from transformers import pipeline
+from transformers.pipelines import pipeline
 from detectors.base import BaseClassifier
 import torch
 from utils.file_tools import read_json_file

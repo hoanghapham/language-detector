@@ -24,7 +24,6 @@ if __name__ == "__main__":
     x_test_raw = read_text_lines(PROJECT_DIR / "data/wili-2018/x_test.txt")
     y_test_raw = read_text_lines(PROJECT_DIR / "data/wili-2018/y_test.txt")
 
-
     # Prepare dataset
     label_list = sorted(set(y_train_raw))
     num_labels = len(label_list)
@@ -41,33 +40,30 @@ if __name__ == "__main__":
     def tokenize(example):
         return tokenizer(example["text"], truncation=True, padding="max_length", max_length=128)
 
-
-    if (CACHED_DATA_DIR / "toknized_train").exists() and (CACHED_DATA_DIR / "tokenized_test").exists():
-
-
-        train_dict = {"text": x_train_raw, "label": y_train_raw}
-        test_dict = {"text": x_test_raw, "label": y_test_raw}
-
-        train_ds = Dataset.from_dict(train_dict)
-        test_ds = Dataset.from_dict(test_dict)
-
-        # Encode label to numbers
-        train_ds = train_ds.map(encode_labels)
-        test_ds = test_ds.map(encode_labels)
-
-
-        # Tokenize texts
-        tokenized_train = train_ds.map(tokenize, batched=True)
-        tokenized_test = test_ds.map(tokenize, batched=True)
-
-        tokenized_train.save_to_disk(CACHED_DATA_DIR / "tokenized_train")
-        tokenized_test.save_to_disk(CACHED_DATA_DIR / "tokenized_test")
-    
-    else:
-        print("Load data")
+    # Load train data
+    if (CACHED_DATA_DIR / "toknized_train").exists():
+        print("Load train data")
         tokenized_train = Dataset.load_from_disk(CACHED_DATA_DIR / "tokenized_train")
         tokenized_test = Dataset.load_from_disk(CACHED_DATA_DIR / "tokenized_test")
+    else:
+        train_dict = {"text": x_train_raw, "label": y_train_raw}
+        train_ds = Dataset.from_dict(train_dict)
+        train_ds = train_ds.map(encode_labels)
+        tokenized_train = train_ds.map(tokenize, batched=True)
+        tokenized_train.save_to_disk(CACHED_DATA_DIR / "tokenized_train")
 
+    # Load test data
+    if (CACHED_DATA_DIR / "toknized_test").exists():
+        print("Load test data")
+        tokenized_test = Dataset.load_from_disk(CACHED_DATA_DIR / "tokenized_test")
+        tokenized_test = Dataset.load_from_disk(CACHED_DATA_DIR / "tokenized_test")
+    else:
+        test_dict = {"text": x_test_raw, "label": y_test_raw}
+        test_ds = Dataset.from_dict(test_dict)
+        test_ds = test_ds.map(encode_labels)
+        tokenized_test = test_ds.map(tokenize, batched=True)
+        tokenized_test.save_to_disk(CACHED_DATA_DIR / "tokenized_test")
+            
     # Load model
     print("Load model")
     model = XLMRobertaForSequenceClassification.from_pretrained(
@@ -76,7 +72,6 @@ if __name__ == "__main__":
         id2label=id2label,
         label2id=label2id,
     )
-
     
     print("Start training")
     # Setup & train
@@ -104,5 +99,5 @@ if __name__ == "__main__":
     trainer.train()
 
     # Save
-    trainer.save_model(PROJECT_DIR / "xlm-roberta-small")
-    tokenizer.save_pretrained(PROJECT_DIR / "xlm-roberta-small")
+    trainer.save_model(PROJECT_DIR / "models/xlm-roberta")
+    tokenizer.save_pretrained(PROJECT_DIR  / "models/xlm-roberta")
