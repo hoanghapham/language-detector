@@ -4,8 +4,8 @@ This project is a full web application that can do language detection. Component
 - Backend: FastAPI
 - UI: `streamlit`
 - Models:
-    - scikit-learn: `MultinomialNB`, trained for multi-class classification
     - Transformers: [XLM RoBERTa Small](https://huggingface.co/Unbabel/xlm-roberta-comet-small), fine-tuned for language detection.
+    - scikit-learn: `MultinomialNB`, trained for multi-class classification
 
 
 ## Install packages
@@ -45,7 +45,7 @@ To perform language detection, you can upload files to the app (multiple files a
 SUPPORT_EXTENSIONS = ["txt", "pdf", "doc", "docx", 'md', "odt"]
 ```
 
-Alternatively, you can also type in some texts into the text box. After that, you can select the model to be used for the detection task. Two supported models are NaiveBayes (implemented with `scikit-learn`) and XLM-RoBERTa (the multi-lingual version of RoBERTa). 
+Alternatively, you can also type in some texts into the text box. After that, you can select the model to be used for the detection task. Two supported models are XLM-RoBERTa Small (fine-tuned for language detection) and NaiveBayes (implemented with `scikit-learn`).
 
 After clicking "Predict", the app will take some time to load the model for the first time if it's not loaded yet. Then, the app will display the file, the language detected, and the score corresponding to the language.
 

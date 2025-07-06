@@ -1,0 +1,68 @@
+# Dockerfile.backend
+# References: 
+# https://github.com/astral-sh/uv-docker-example/blob/main/Dockerfile
+# https://github.com/astral-sh/uv-docker-example/blob/main/multistage.Dockerfile
+
+# Stage 1
+ARG PYTHON_VERSION=3.11.5
+FROM python:${PYTHON_VERSION}-slim AS builder
+
+# Prevents Python from writing pyc files.
+ENV PYTHONDONTWRITEBYTECODE=1
+
+# Keeps Python from buffering stdout and stderr to avoid situations where
+# the application crashes without emitting any logs due to buffering.
+ENV PYTHONUNBUFFERED=1
+
+# Set WORKDIR
+WORKDIR /app
+
+# Setup uv
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+RUN uv venv --python ${PYTHON_VERSION}
+
+# Install requirements without project
+COPY pyproject.toml uv.lock /app/
+RUN uv sync --frozen --no-install-project --no-dev
+
+# Copy project to image, then install the project
+COPY src/app        /app/src/app/
+COPY src/detectors  /app/src/detectors/
+COPY src/utils      /app/src/utils/
+COPY assets/        /app/assets/
+COPY models/        /app/models/
+COPY README.md      /app/
+RUN uv sync --frozen --no-dev
+
+
+# Stage 2
+FROM python:${PYTHON_VERSION}-slim AS runtime
+
+# Switch to the non-privileged user to run the application.
+# Create a non-privileged user that the app will run under.
+# See https://docs.docker.com/go/dockerfile-user-best-practices/
+ARG UID=10001
+RUN adduser \
+    --disabled-password \
+    --gecos "" \
+    --home "/nonexistent" \
+    --shell "/sbin/nologin" \
+    --no-create-home \
+    --uid "${UID}" \
+    appuser
+
+USER appuser
+
+# Copy files
+COPY --from=builder --chown=appuser:appuser /app /app
+
+# Make sure the executables in .venv are accessible
+ENV PATH="/app/.venv/bin:$PATH"
+ENV PYTHONPATH="/app:$PYTHONPATH"
+
+# Expose the port that the application listens on.
+EXPOSE 8000
+
+ENTRYPOINT []
+
+CMD ["fastapi", "run", "--host", "0.0.0.0", "--port", "8000", "/app/src/app/main.py"]
