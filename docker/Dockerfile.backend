@@ -25,7 +25,7 @@ RUN uv venv --python ${PYTHON_VERSION}
 COPY pyproject.toml uv.lock /app/
 RUN uv sync --frozen --no-install-project --no-dev
 
-# Copy project to image, then install the project
+# Copy required modules for backend app, then install
 COPY src/app        /app/src/app/
 COPY src/detectors  /app/src/detectors/
 COPY src/utils      /app/src/utils/

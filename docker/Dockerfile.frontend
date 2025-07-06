@@ -1,6 +1,11 @@
 # Dockerfile.backend
+# References: 
+# https://github.com/astral-sh/uv-docker-example/blob/main/Dockerfile
+# https://github.com/astral-sh/uv-docker-example/blob/main/multistage.Dockerfile
+
+# Stage 1
 ARG PYTHON_VERSION=3.11.5
-FROM python:${PYTHON_VERSION}-slim AS base
+FROM python:${PYTHON_VERSION}-slim AS builder
 
 # Prevents Python from writing pyc files.
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -9,39 +14,55 @@ ENV PYTHONDONTWRITEBYTECODE=1
 # the application crashes without emitting any logs due to buffering.
 ENV PYTHONUNBUFFERED=1
 
+# Set WORKDIR
 WORKDIR /app
 
+# Setup uv
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+RUN uv venv --python ${PYTHON_VERSION}
+
+# Install requirements without project
+COPY pyproject.toml uv.lock /app/
+RUN uv sync --frozen --no-install-project --no-dev
+
+# Copy required modules for frontend, then install
+COPY src/streamlit_ui   /app/src/streamlit_ui/
+COPY src/detectors      /app/src/detectors/
+COPY src/processors     /app/src/processors/
+COPY src/utils          /app/src/utils/
+COPY assets/            /app/assets/
+COPY README.md          /app/
+RUN uv sync --frozen --no-dev
+
+
+# Stage 2
+FROM python:${PYTHON_VERSION}-slim AS runtime
+
+# Switch to the non-privileged user to run the application.
 # Create a non-privileged user that the app will run under.
 # See https://docs.docker.com/go/dockerfile-user-best-practices/
 ARG UID=10001
 RUN adduser \
     --disabled-password \
     --gecos "" \
-    --home "/nonexistent" \
+    # --home "/appuser" \
     --shell "/sbin/nologin" \
-    --no-create-home \
+    # --no-create-home \
     --uid "${UID}" \
     appuser
 
+USER appuser
 
-# Install requirements
-COPY pyproject.toml uv.lock ./
-COPY ../README.md /src/detectors
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
-RUN uv sync --locked
-RUN source .venv/bin/activate
-# RUN pip install --no-cache-dir .
+# Copy files
+COPY --from=builder --chown=appuser:appuser /app /app
 
-COPY src/processors /app/processors
-COPY src/detectors /app/detectors
-COPY src/streamlit_ui /app/streamlit_ui
-COPY src/utils /app/utils
+# Make sure the executables in .venv are accessible
+ENV PATH="/app/.venv/bin:$PATH"
+ENV PYTHONPATH="/app:$PYTHONPATH"
 
 # Expose the port that the application listens on.
 EXPOSE 8501
 
-# Switch to the non-privileged user to run the application.
-USER appuser
+ENTRYPOINT []
 
-CMD ["streamlit", "run", "streamlit_ui/main.py", \
-    "--server.port=8501", "--server.address=0.0.0.0"]
+CMD ["streamlit", "run", "/app/src/streamlit_ui/main.py", "--server.port=8501"]

@@ -1,21 +1,27 @@
+import os
 import streamlit as st
 import requests
 import pandas as pd
 import tempfile
 from pathlib import Path
+from dotenv import load_dotenv
 
 from processors.file_handlers import extract_text, SUPPORT_EXTENSIONS
 from utils.schemas import PredictionInput
 
-
-API_URL = "http://localhost:8000/predict"
-
+load_dotenv()
+API_URL = os.getenv("API_URL") if "API_URL" in os.environ else "http://0.0.0.0:8000"
 
 st.title("Language Detection")
 
 # --- Upload file or input text ---
-uploaded_files = st.file_uploader("Upload documents", type=SUPPORT_EXTENSIONS, accept_multiple_files=True)
-manual_text = st.text_area("Or enter text manually", height=150)
+col1, col2 = st.columns(2)
+
+with col1:
+    uploaded_files = st.file_uploader("Upload documents", type=SUPPORT_EXTENSIONS, accept_multiple_files=True)
+
+with col2:
+    manual_text = st.text_area("Or enter text manually", height=150)
 
 # --- Model selection ---
 model = st.selectbox("Select model", ["XLM-RoBERTa", "NaiveBayes"])  # default to XLM-RoBERTa
@@ -53,7 +59,7 @@ if st.button("Predict"):
     )
 
     # Prepare request
-    response = requests.post(API_URL, json=prediction_input.model_dump(), timeout=300)
+    response = requests.post(API_URL + "/predict", json=prediction_input.model_dump(), timeout=300)
 
     if response.status_code == 200:
         data = response.json()["results"]  # list of [language, probability]
