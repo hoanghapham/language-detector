@@ -8,7 +8,8 @@ This project is a full web application that can do language detection. Component
     - scikit-learn: `MultinomialNB`, trained for multi-class classification
 
 
-## Install packages
+## Manual Setup
+
 - Clone this project.
 - Create a virtual environment using `venv`, `pyenv`, or `conda`, and activate the environment.
 - Install required packages with [uv project manager](https://docs.astral.sh/uv/#installation):
@@ -27,15 +28,39 @@ uv pip install -e .
 pip install -r requirements.txt
 ```
 
-## Run the app
-
-Run:
+To run the app:
 
 ```bash
 python run.py
 ```
 
 The script with launch the application in a new browser tab.
+
+
+## Setting up with Docker
+
+To set up and run the app using Docker, for the first time you will need to build the image:
+
+```bash
+docker compose -f docker/compose.yaml build
+```
+
+To run the app after building:
+
+```bash
+docker compose -f docker/compose.yaml up
+```
+
+These `docker compose` commands will do the following:
+- Build the Docker images for the backend and frontend services
+- Run the two services in isolation
+
+On the first run you can also combine the two commands like so:
+
+```bash
+docker compose -f docker/compose.yaml up --build
+```
+
 
 ## Language detection
 
@@ -45,7 +70,7 @@ To perform language detection, you can upload files to the app (multiple files a
 SUPPORT_EXTENSIONS = ["txt", "pdf", "doc", "docx", 'md', "odt"]
 ```
 
-Alternatively, you can also type in some texts into the text box. After that, you can select the model to be used for the detection task. Two supported models are XLM-RoBERTa Small (fine-tuned for language detection) and NaiveBayes (implemented with `scikit-learn`).
+Alternatively, you can also type in some texts into the text box. After that, you can select the model to be used for the detection task. Two supported models are XLM-RoBERTa Small (available via Hugging Face, fine-tuned for language detection) and NaiveBayes (implemented with `scikit-learn`).
 
 After clicking "Predict", the app will take some time to load the model for the first time if it's not loaded yet. Then, the app will display the file, the language detected, and the score corresponding to the language.
 
