@@ -16,7 +16,9 @@ class XLMRoBERTAClassifier(BaseClassifier):
             task="text-classification", 
             model=self.model_path, 
             tokenizer=self.model_path,
-            device=self.device
+            device=self.device,
+            padding=True,
+            truncation=True
         )
 
         self.labels = read_json_file(PROJECT_DIR / "assets/lang_labels.json")
@@ -27,14 +29,14 @@ class XLMRoBERTAClassifier(BaseClassifier):
     def evaluate(self, X_raw: list[str], y_raw: list[str]) -> dict:
         pass
     
-    def predict(self, texts: list[str]) -> list[tuple[str, float]]:
+    def predict(self, texts: str | list[str]) -> list[tuple[str, float]]:
         results_raw = self.pipe(texts)
         results = [(result["label"], result["score"]) for result in results_raw]
         return results
 
     @property
     def categories(self):
-        return list(self.labels.keys())
+        return sorted(self.labels.keys())
     
 
 def load_transformer_model(path: str | Path):
