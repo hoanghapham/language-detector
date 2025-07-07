@@ -12,7 +12,14 @@ from utils.schemas import PredictionInput
 load_dotenv()
 API_URL = os.getenv("API_URL") if "API_URL" in os.environ else "http://0.0.0.0:8000"
 
-st.title("Language Detection")
+# --- Helpers ---
+
+# --- Page config ---
+st.set_page_config(
+    page_title="Language Detector",
+    layout="wide"
+)
+st.title("Language Detector")
 
 # --- Upload file or input text ---
 col1, col2 = st.columns(2)
@@ -23,15 +30,18 @@ with col1:
 with col2:
     manual_text = st.text_area("Or enter text manually", height=150)
 
-# --- Model selection ---
-model = st.selectbox("Select model", ["XLM-RoBERTa", "NaiveBayes"])  # default to XLM-RoBERTa
+col3, col4 = st.columns(2)
 
-# --- Predict button ---
-file_names = []
+with col3:
+    # --- Model selection ---
+    model = st.selectbox("Select model", ["XLM-RoBERTa", "NaiveBayes"])  # default to XLM-RoBERTa
 
-if st.button("Predict"):
-    # Read input
+    # --- Predict button ---
+    predict_button = st.button("Predict")
 
+if predict_button:
+    file_names = []
+    
     if uploaded_files:
         texts = []
         for file in uploaded_files:
