@@ -9,6 +9,7 @@ This project is a full web application for language detection. Main components:
 
 Both models are trained using the [WiLI-2018 dataset](https://zenodo.org/records/841984) contains 235000 paragraphs of 235 languages, curated from Wikipedia.
 
+Project repo: https://github.com/hoanghapham/language-detector
 
 ## Folder structure
 
@@ -25,6 +26,12 @@ Here are a brief overview of the project's structure:
     - `streamlit_ui`: A simple UI built with Streamlit
     - `utils`: Helper functions and schemas for input/output contents, to assist the communication between frontend and backend
     - `tests`: Unit tests for the API and two models.
+
+# Preparation
+
+To run the app, please make sure to download all the model files from the link below and place them in the `models` folder:
+
+https://github.com/hoanghapham/language-detector/tree/main/models
 
 
 ## Manual Setup & Running
