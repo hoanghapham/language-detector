@@ -27,7 +27,7 @@ Here are a brief overview of the project's structure:
     - `tests`: Unit tests for the API and two models.
 
 
-## Manual Setup
+## Manual Setup & Running
 
 The project can be installed using `uv` or `pip`. Here are the steps:
 
@@ -66,7 +66,7 @@ python run.py
 The script with launch the application in a new browser tab.
 
 
-## Setting up with Docker
+## Setting up & Running with Docker
 
 To set up and run the app using Docker, for the first time you will need to build the image:
 
@@ -89,6 +89,8 @@ On the first run you can also combine the two commands like so:
 ```bash
 docker compose -f docker/compose.yaml up --build
 ```
+
+This will also launch the app in a new browser tab.
 
 
 ## Language detection
