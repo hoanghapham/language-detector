@@ -40,6 +40,7 @@ class XLMRoBERTAClassifier(BaseClassifier):
     
 
 def load_transformer_model(path: str | Path):
+    """Initiate a transformer model"""
     path = str(path)
     model = XLMRoBERTAClassifier(path)
     return model

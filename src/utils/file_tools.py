@@ -3,7 +3,6 @@ import os
 import sys
 import json
 import unicodedata
-from joblib import load, dump
 
 
 def list_files(input_path: Path | str, extensions) -> list[Path]:
@@ -18,41 +17,6 @@ def list_files(input_path: Path | str, extensions) -> list[Path]:
     ]
         
     return files
-
-
-class suppress_stdout_stderr(object):
-    def __enter__(self):
-        self.outnull_file = open(os.devnull, 'w')
-        self.errnull_file = open(os.devnull, 'w')
-
-        self.old_stdout_fileno_undup    = sys.stdout.fileno()
-        self.old_stderr_fileno_undup    = sys.stderr.fileno()
-
-        self.old_stdout_fileno = os.dup ( sys.stdout.fileno() )
-        self.old_stderr_fileno = os.dup ( sys.stderr.fileno() )
-
-        self.old_stdout = sys.stdout
-        self.old_stderr = sys.stderr
-
-        os.dup2 ( self.outnull_file.fileno(), self.old_stdout_fileno_undup )
-        os.dup2 ( self.errnull_file.fileno(), self.old_stderr_fileno_undup )
-
-        sys.stdout = self.outnull_file        
-        sys.stderr = self.errnull_file
-        return self
-
-    def __exit__(self, *_):        
-        sys.stdout = self.old_stdout
-        sys.stderr = self.old_stderr
-
-        os.dup2 ( self.old_stdout_fileno, self.old_stdout_fileno_undup )
-        os.dup2 ( self.old_stderr_fileno, self.old_stderr_fileno_undup )
-
-        os.close ( self.old_stdout_fileno )
-        os.close ( self.old_stderr_fileno )
-
-        self.outnull_file.close()
-        self.errnull_file.close()
 
 
 def read_ndjson_file(input_path: Path | str) -> list[dict]:
@@ -126,8 +90,3 @@ def write_list_to_text_file(lst: list[str], output_path: Path | str, linebreak=T
             f.write(line)
             if linebreak:
                 f.write("\n")
-
-
-def normalize_name(s):
-    return unicodedata.normalize('NFD', s)
-

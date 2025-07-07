@@ -1,11 +1,9 @@
-from sklearn.base import BaseEstimator
 from abc import ABC, abstractmethod
-import numpy as np
 from numpy.typing import ArrayLike
 
 
 class BaseClassifier(ABC):
-
+    """Base class for the two classifiers"""
     @abstractmethod
     def __init__(self) -> None:
         pass

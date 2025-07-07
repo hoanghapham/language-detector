@@ -71,6 +71,7 @@ class NaiveBayesClassifier(BaseClassifier):
 
 
 def save_pkl_model(model, path: str|Path):
+    """Save a scikit-learn model in .pkl format"""
     save_path = Path(path)
     assert save_path.suffix == ".pkl", "Model path must end with '.pkl'"
 
@@ -82,6 +83,7 @@ def save_pkl_model(model, path: str|Path):
 
 
 def load_pkl_model(path: str | Path):
+    """Load a scikit-learn model saved in .pkl format"""
     assert Path(path).suffix == ".pkl", "Model path must end with '.pkl'"
     with open(path, "rb") as f:
         model = joblib.load(f)
@@ -90,6 +92,7 @@ def load_pkl_model(path: str | Path):
 
 
 def save_skops_model(model, path: str | Path):
+    """Load a scikit-learn model in .skops format"""
     save_path = Path(path)
 
     assert save_path.suffix == ".skops", "Model path must end with .skops"
@@ -101,6 +104,7 @@ def save_skops_model(model, path: str | Path):
 
 
 def load_skops_model(path: str | Path):
+    """Load a scikit-learn model saved in .skops format"""
     assert Path(path).suffix == ".skops", "Model path must end with '.skops'"
     unknown_types = sio.get_untrusted_types(file=path)
     model = sio.load(path, trusted=unknown_types)

@@ -11,4 +11,3 @@ class PredictionInput(BaseModel):
 class PredictionOutput(BaseModel):
     # File name, language code, language name, probability
     results: List[Tuple[str, str, str, float]]
-    

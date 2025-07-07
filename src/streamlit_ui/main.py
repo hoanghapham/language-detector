@@ -1,3 +1,4 @@
+"""UI for the language detection app"""
 import os
 import streamlit as st
 import requests
@@ -11,8 +12,6 @@ from utils.schemas import PredictionInput
 
 load_dotenv()
 API_URL = os.getenv("API_URL") if "API_URL" in os.environ else "http://0.0.0.0:8000"
-
-# --- Helpers ---
 
 # --- Page config ---
 st.set_page_config(

@@ -1,13 +1,29 @@
 #%%
 import textract
 from pathlib import Path
+from typing import Optional
 from utils.file_tools import read_text_joined
 
 
 SUPPORT_EXTENSIONS = ["txt", "pdf", "doc", "docx", 'md', "odt"]
 
 
-def extract_text(file_path: str | Path, ext=None, max_chars: int = -1):
+def extract_text(file_path: str | Path, ext: Optional[str] = None, max_chars: int = -1) -> str:
+    """Extract text from the supported files.
+
+    Parameters
+    ----------
+    file_path : str | Path
+    ext : Optional[str], optional
+        Extension of the file, by default None
+    max_chars : int, optional
+        Maximum number of characters to extract from a file, by default -1, meaning extracting all texts.
+
+    Returns
+    -------
+    str
+        The text extracted from the file
+    """
     fp = Path(file_path)
     if ext is None:
         ext = fp.suffix.lower().replace(".", "")
