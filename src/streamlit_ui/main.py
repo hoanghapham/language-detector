@@ -50,7 +50,7 @@ if predict_button:
             with tempfile.NamedTemporaryFile(delete=False) as temp:
                 temp.write(bytes_data)
             
-            text = extract_text(temp.name, ext=ext, max_chars=500)
+            text = extract_text(str(temp.name), ext=ext, max_chars=500)
             texts.append(text)
 
         file_names = [file.name for file in uploaded_files]

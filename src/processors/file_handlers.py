@@ -24,9 +24,9 @@ def extract_text(file_path: str | Path, ext: Optional[str] = None, max_chars: in
     str
         The text extracted from the file
     """
-    fp = Path(file_path)
+    fp = str(file_path)
     if ext is None:
-        ext = fp.suffix.lower().replace(".", "")
+        ext = Path(fp).suffix.lower().replace(".", "")
     
     assert ext in SUPPORT_EXTENSIONS, f"File extension must be one of {SUPPORT_EXTENSIONS}"
 
